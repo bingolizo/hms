@@ -1,0 +1,6 @@
+Django
+djangorestframework
+psycopg2-binary
+pika
+requests
+PyJWT

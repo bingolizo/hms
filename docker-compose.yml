@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  patient-service:
+    build:
+      context: ./patient-service
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://user:password@db_patient/patient_db
+    depends_on:
+      - db_patient
+      - rabbitmq
+
+  appointment-service:
+    build:
+      context: ./appointment-service
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgres://user:password@db_appointment/appointment_db
+    depends_on:
+      - db_appointment
+      - rabbitmq
+
+  db_patient:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: patient_db
+      POSTGRES_USER: healthcare_user
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+
+  db_appointment:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: appointments_db
+      POSTGRES_USER: healthcare_user
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5433:5432"
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
